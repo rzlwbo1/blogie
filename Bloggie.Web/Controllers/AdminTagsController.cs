@@ -47,5 +47,15 @@ namespace Bloggie.Web.Controllers
 
             return RedirectToAction("Add");
         }
+
+
+        [HttpGet]
+        public IActionResult List()
+        {
+            // read db conttext
+            var tags = bloggieDbContext.Tags.ToList();
+
+            return View(tags);
+        }
     }
 }
