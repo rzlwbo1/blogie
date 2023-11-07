@@ -9,6 +9,15 @@
 </div>
 
 <div class="container py-5">
+
+    @if (TempData["msg"] != null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>@TempData["msg"]</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     @if (Model != null && Model.Any())
     {
         <table class="table table-striped">
@@ -17,6 +26,7 @@
                     <th>Id</th>
                     <th>Name</th>
                     <th>Display</th>
+                    <th>Options</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +41,14 @@
                         </td>
                         <td>
                             @tag.DisplayName
+                        </td>
+                        <td>
+                            <div class="d-flex gap-3">
+                                <a asp-controller="AdminTags" asp-action="Edit" class="btn btn-primary btn-sm"
+                                   asp-route-id="@tag.Id">
+                                    Edit
+                                </a>
+                            </div>
                         </td>
                     </tr>
                 }

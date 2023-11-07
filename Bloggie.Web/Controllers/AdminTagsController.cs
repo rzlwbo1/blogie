@@ -2,6 +2,7 @@
 using Bloggie.Web.Models.Domain;
 using Bloggie.Web.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bloggie.Web.Controllers
 {
@@ -57,5 +58,82 @@ namespace Bloggie.Web.Controllers
 
             return View(tags);
         }
+
+
+        [HttpGet]
+        public IActionResult Edit(Guid id)
+        {
+
+            var foundTag = bloggieDbContext.Tags.FirstOrDefault(t => t.Id == id);
+
+            if (foundTag != null)
+            {
+                var editTag = new EditTagRequest()
+                {
+                    Id = id,
+                    Name = foundTag.Name,
+                    DisplayName = foundTag.DisplayName,
+                };
+                return View(editTag);
+            }
+
+            return View(null);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(EditTagRequest editTag)
+        {
+            var editedTag = new Tag()
+            {
+                Id = editTag.Id,
+                Name = editTag.Name,
+                DisplayName = editTag.DisplayName,
+            };
+
+            try
+            {
+                bloggieDbContext.Tags.Update(editedTag);
+                bloggieDbContext.SaveChanges();
+            }
+            catch (DbUpdateException e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                TempData["msg"] = $"Failed to Update {e.Message}";
+                return RedirectToAction("Edit", new {id = editedTag.Id});
+            }
+
+            return RedirectToAction("List");
+        }
+
+
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteTag(EditTagRequest editTag)
+        {
+            try
+            {
+                var tag = bloggieDbContext.Tags.Find(editTag.Id);
+
+                if (tag != null)
+                {
+                    bloggieDbContext.Tags.Remove(tag);
+                    bloggieDbContext.SaveChanges();
+                    TempData["msg"] = "Succes to Delete";
+                }
+
+            }
+            catch (DbUpdateException e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                TempData["msg"] = $"Failed to Delete {e.Message}";
+            }
+
+            return RedirectToAction("List");
+
+        }
+
     }
 }
