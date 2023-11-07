@@ -26,7 +26,7 @@ namespace Bloggie.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Add")]
-        public IActionResult SubmitTag(AddTagRequest addTagRequest)
+        public async Task<IActionResult> SubmitTag(AddTagRequest addTagRequest)
         {
             // Manually get request from form
             //var name = Request.Form["name"]; // name = value dalam attribue name html
@@ -43,18 +43,18 @@ namespace Bloggie.Web.Controllers
                 DisplayName = addTagRequest.DisplayName,
             };
 
-            bloggieDbContext.Tags.Add(newTag);
-            bloggieDbContext.SaveChanges();
+            await bloggieDbContext.Tags.AddAsync(newTag);
+            await bloggieDbContext.SaveChangesAsync();
 
             return RedirectToAction("Add");
         }
 
 
         [HttpGet]
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
             // read db conttext
-            var tags = bloggieDbContext.Tags.ToList();
+            var tags = await bloggieDbContext.Tags.ToListAsync();
 
             return View(tags);
         }
@@ -77,13 +77,13 @@ namespace Bloggie.Web.Controllers
                 return View(editTag);
             }
 
-            return View(null);
+            return NotFound();
         }
 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(EditTagRequest editTag)
+        public async Task<IActionResult> Edit(EditTagRequest editTag)
         {
             var editedTag = new Tag()
             {
@@ -95,7 +95,7 @@ namespace Bloggie.Web.Controllers
             try
             {
                 bloggieDbContext.Tags.Update(editedTag);
-                bloggieDbContext.SaveChanges();
+                await bloggieDbContext.SaveChangesAsync();
             }
             catch (DbUpdateException e)
             {
@@ -111,7 +111,7 @@ namespace Bloggie.Web.Controllers
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteTag(EditTagRequest editTag)
+        public async Task<IActionResult> DeleteTag(EditTagRequest editTag)
         {
             try
             {
@@ -120,7 +120,36 @@ namespace Bloggie.Web.Controllers
                 if (tag != null)
                 {
                     bloggieDbContext.Tags.Remove(tag);
-                    bloggieDbContext.SaveChanges();
+                    await bloggieDbContext.SaveChangesAsync();
+                    TempData["msg"] = "Succes to Delete";
+                }
+
+            }
+            catch (DbUpdateException e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                TempData["msg"] = $"Failed to Delete {e.Message}";
+            }
+
+            return RedirectToAction("List");
+
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteOuter()
+        {
+
+            Guid id = new Guid(Request.Form["idTag"].ToString());
+            try
+            {
+                var tag = bloggieDbContext.Tags.Find(id);
+
+                if (tag != null)
+                {
+                    bloggieDbContext.Tags.Remove(tag);
+                    await bloggieDbContext.SaveChangesAsync();
                     TempData["msg"] = "Succes to Delete";
                 }
 

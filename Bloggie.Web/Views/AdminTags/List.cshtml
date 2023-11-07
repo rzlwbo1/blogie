@@ -20,7 +20,7 @@
 
     @if (Model != null && Model.Any())
     {
-        <table class="table table-striped">
+        <table class="table table-striped table-sm">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -48,6 +48,11 @@
                                    asp-route-id="@tag.Id">
                                     Edit
                                 </a>
+
+                                <form method="post" asp-action="DeleteOuter" asp-controller="AdminTags">
+                                    <input type="hidden" value="@tag.Id" name="idTag" readonly/>
+                                    <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
