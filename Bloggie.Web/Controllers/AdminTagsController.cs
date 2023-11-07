@@ -46,7 +46,10 @@ namespace Bloggie.Web.Controllers
             var tag = await tagRepository.AddAsync(newTag);
 
             if(tag != null)
-                return RedirectToAction("Add");
+            {
+                TempData["msg"] = "Succes Adding Tag";
+                return RedirectToAction("List");
+            }
 
             return RedirectToAction("Add");
         }
