@@ -136,5 +136,56 @@ namespace Bloggie.Web.Controllers
             return NotFound();
         }
 
+        [HttpPost]
+        [ActionName("Edit")]
+        public async Task<IActionResult> EditBLog(EditBlogPostRequest editBlogPost)
+        {
+            // map vm to model domain
+            var BlogPosts = new BlogPosts
+            {
+                Id = editBlogPost.Id,
+                Heading = editBlogPost.Heading,
+                PageTitle = editBlogPost.PageTitle,
+                Content = editBlogPost.Content,
+                ShortDescription = editBlogPost.ShortDescription,
+                UrlHandle = editBlogPost.UrlHandle,
+                FeaturedImageUrl = editBlogPost.FeaturedImageUrl,
+                Author = editBlogPost.Author,
+                PublishDate = DateTime.Now,
+                Visible = editBlogPost.Visible,
+
+            };
+
+            // map tags into domain
+            var selectedTags = new List<Tag>();
+            foreach (var tagInput in editBlogPost.SelectedTags)
+            {
+                if(Guid.TryParse(tagInput, out var tagId))
+                {
+                    var foundTag = await tagRepository.GetAsync(tagId);
+
+                    if (foundTag != null)
+                    {
+                        selectedTags.Add(foundTag);
+                    }
+                }
+            }
+
+            // assign to domain
+            BlogPosts.Tags = selectedTags;
+
+            // pass to repo
+            var updatedBlog = await blogRepository.UpdateAsync(BlogPosts);
+            if (updatedBlog != null)
+            {
+                TempData["msg"] = "Succes Update BLog";
+                return RedirectToAction("List");
+            }
+
+            TempData["msg"] = "Failed Update BLog";
+            return RedirectToAction("Edit");
+
+        }
+
     }
 }

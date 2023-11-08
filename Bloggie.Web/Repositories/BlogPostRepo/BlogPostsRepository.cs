@@ -43,9 +43,33 @@ namespace Bloggie.Web.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public Task<BlogPosts?> UpdateAsync(BlogPosts tag)
+        public async Task<BlogPosts?> UpdateAsync(BlogPosts blog)
         {
-            throw new NotImplementedException();
+            var existingBlog = await _context.BlogPosts
+                .Include(x => x.Tags)
+                .FirstOrDefaultAsync(x => x.Id == blog.Id);
+
+            if (existingBlog != null)
+            {
+                existingBlog.Id = blog.Id;
+                existingBlog.Heading = blog.Heading;
+                existingBlog.Author = blog.Author;
+                existingBlog.PageTitle = blog.PageTitle;
+                existingBlog.Content = blog.Content;
+                existingBlog.FeaturedImageUrl = blog.FeaturedImageUrl;
+                existingBlog.ShortDescription = blog.ShortDescription;
+                existingBlog.PublishDate = blog.PublishDate;
+                existingBlog.UrlHandle = blog.UrlHandle;
+                existingBlog.Visible = blog.Visible;
+                existingBlog.Tags = blog.Tags;
+
+                await _context.SaveChangesAsync();
+                return existingBlog;
+
+            }
+
+            return null;
+
         }
     }
 }
