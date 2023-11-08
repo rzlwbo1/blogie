@@ -3,7 +3,7 @@ using Bloggie.Web.Data;
 using Bloggie.Web.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bloggie.Web.Repositories
+namespace Bloggie.Web.Repositories.TagRepo
 {
     public class TagRepository : ITagRepository
     {
@@ -12,7 +12,7 @@ namespace Bloggie.Web.Repositories
 
         public TagRepository(BloggieDbContext bloggieDb)
         {
-            this._context = bloggieDb;
+            _context = bloggieDb;
         }
 
 

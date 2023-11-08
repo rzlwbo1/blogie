@@ -1,5 +1,7 @@
 using Bloggie.Web.Data;
 using Bloggie.Web.Repositories;
+using Bloggie.Web.Repositories.BlogPostRepo;
+using Bloggie.Web.Repositories.TagRepo;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,7 @@ builder.Services.AddDbContext<BloggieDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConn")));
 
 builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<IBlogPostsRepository, BlogPostsRepository>();
 
 var app = builder.Build();
 
