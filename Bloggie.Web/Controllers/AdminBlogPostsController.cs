@@ -138,6 +138,7 @@ namespace Bloggie.Web.Controllers
 
         [HttpPost]
         [ActionName("Edit")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditBLog(EditBlogPostRequest editBlogPost)
         {
             // map vm to model domain
@@ -185,6 +186,23 @@ namespace Bloggie.Web.Controllers
             TempData["msg"] = "Failed Update BLog";
             return RedirectToAction("Edit");
 
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(EditBlogPostRequest editBlogPost)
+        {
+
+            var deleted = await blogRepository.DeleteAsync(editBlogPost.Id);
+            if (deleted != null)
+            {
+                TempData["msg"] = "Succes to Delete blog";
+                return RedirectToAction("List");
+            }
+
+            TempData["msg"] = "Failed to Delete blog";
+            return RedirectToAction("Edit", new { id = editBlogPost.Id });
         }
 
     }
