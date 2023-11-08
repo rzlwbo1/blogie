@@ -124,6 +124,7 @@ namespace Bloggie.Web.Controllers
                 if (tag != null)
                 {
                     TempData["msg"] = "Succes to Delete";
+                    return RedirectToAction("List");
                 }
 
             }
@@ -133,7 +134,7 @@ namespace Bloggie.Web.Controllers
                 TempData["msg"] = $"Failed to Delete {e.Message}";
             }
 
-            return RedirectToAction("List");
+            return RedirectToAction("Edit", new {id = editTag.Id});
 
         }
 

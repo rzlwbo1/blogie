@@ -79,12 +79,12 @@ namespace Bloggie.Web.Controllers
             {
                 await blogRepository.AddAsync(BlogPost);
                 TempData["msg"] = "Succes to adding post";
+                return RedirectToAction("List");
 
             }
             catch (Exception)
             {
                 TempData["msg"] = "Failed To Adding Post";
-                throw;
             }
 
             return RedirectToAction("Add");
@@ -184,7 +184,7 @@ namespace Bloggie.Web.Controllers
             }
 
             TempData["msg"] = "Failed Update BLog";
-            return RedirectToAction("Edit");
+            return RedirectToAction("Edit", new {id = editBlogPost.Id});
 
         }
 
