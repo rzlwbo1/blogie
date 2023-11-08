@@ -36,9 +36,11 @@ namespace Bloggie.Web.Repositories
                 .ToListAsync();
         }
 
-        public Task<BlogPosts> GetAsync(Guid id)
+        public async Task<BlogPosts?> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.BlogPosts
+                .Include(x => x.Tags)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public Task<BlogPosts?> UpdateAsync(BlogPosts tag)

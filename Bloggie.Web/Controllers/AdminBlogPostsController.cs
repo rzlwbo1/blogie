@@ -98,5 +98,43 @@ namespace Bloggie.Web.Controllers
             return View(blogList);
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var blogPost = await blogRepository.GetAsync(id);
+            var tags = await tagRepository.GetAllAsync();
+
+            // karna ketika view form edit perluu menampilkan data tags, maka speerti inilah
+            if (blogPost != null)
+            {
+                var EditBlogRequest = new EditBlogPostRequest()
+                {
+                    Id = id,
+                    Heading = blogPost.Heading,
+                    PageTitle = blogPost.PageTitle,
+                    Content = blogPost.Content,
+                    ShortDescription = blogPost.ShortDescription,
+                    UrlHandle = blogPost.UrlHandle,
+                    FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                    Author = blogPost.Author,
+                    PublishDate = DateTime.Now,
+                    Visible = blogPost.Visible,
+                    Tags = tags.Select(x => new SelectListItem
+                    {
+                        Text = x.DisplayName,
+                        Value = x.Id.ToString(),
+                    }),
+                    SelectedTags = blogPost.Tags.Select(x => x.Id.ToString()).ToArray()
+                };
+
+                return View(EditBlogRequest);
+
+            }
+
+
+            return NotFound();
+        }
+
     }
 }

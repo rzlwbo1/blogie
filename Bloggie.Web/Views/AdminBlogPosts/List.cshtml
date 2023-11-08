@@ -27,6 +27,7 @@
                     <th>Id</th>
                     <th>Heading</th>
                     <th>Tags</th>
+                    <th>Option</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,20 +48,19 @@
                                 }
                             </div>
                         </td>
-                        
-                        @* <td>
+                        <td>
                             <div class="d-flex gap-3">
-                                <a asp-controller="AdminTags" asp-action="Edit" class="btn btn-primary btn-sm"
-                                   asp-route-id="@tag.Id">
+                                <a asp-controller="AdminBlogPosts" asp-action="Edit" class="btn btn-primary btn-sm"
+                                   asp-route-id="@blogPosts.Id">
                                     Edit
                                 </a>
 
                                 <form method="post" asp-action="DeleteOuter" asp-controller="AdminTags">
-                                    <input type="hidden" value="@tag.Id" name="idTag" readonly />
+                                    <input type="hidden" value="@blogPosts.Id" name="idTag" readonly />
                                     <button class="btn btn-danger btn-sm" type="submit">Delete</button>
                                 </form>
                             </div>
-                        </td> *@
+                        </td>
                     </tr>
                 }
             </tbody>
