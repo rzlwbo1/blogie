@@ -88,3 +88,18 @@
         </form>
     }
 </section>
+
+@section Scripts {
+    <script>
+        let editor = new FroalaEditor("#content", {
+            toolbarButtons: {
+                'moreText': {
+                    'buttons': ['bold', 'italic', 'underline', 'strikeThrough', 'fontFamily', 'fontSize', 'clearFormatting']
+                },
+                'moreMisc': {
+                    'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'html'],
+                }
+            }
+        })
+    </script>
+}
