@@ -50,6 +50,24 @@
             </div>
 
             <div class="mb-3">
+                <label for="featuredImageUpload" class="form-label">Featured Image Upload</label>
+                <input type="file" class="form-control" id="featuredImageUpload">
+                <span class="text-danger d-none" id="msgInfo">Sedang Generate URL mohon tunggu</span>
+            </div>
+
+            @if (Model.FeaturedImageUrl != null)
+            {
+                <div class="mb-3">
+                    <img id="thumbImage" src="@Model.FeaturedImageUrl" width="300" />
+                </div>
+            } else
+            {
+                <div class="mb-3">
+                    <img id="thumbImage" src="#" width="300" alt="no-image"/>
+                </div>
+            }
+
+            <div class="mb-3">
                 <label for="featuredImage" class="form-label">Featured Image Url</label>
                 <input type="text" class="form-control" id="featuredImage" asp-for="FeaturedImageUrl">
             </div>
@@ -97,9 +115,41 @@
                     'buttons': ['bold', 'italic', 'underline', 'strikeThrough', 'fontFamily', 'fontSize', 'clearFormatting']
                 },
                 'moreMisc': {
-                    'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'html'],
+                    'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'html', 'insertImage'],
                 }
-            }
+            },
+            imageUploadURL: '/api/images'
         })
+
+
+        const imageUploadElem = document.getElementById("featuredImageUpload");
+        const featuredImageUrl = document.getElementById("featuredImage");
+        const info = document.getElementById("msgInfo");
+        const imagePrev = document.getElementById("thumbImage");
+
+
+        imageUploadElem.addEventListener("change", uploadFeatureImage);
+
+        async function uploadFeatureImage(e) {
+            // console.log(e.target.files[0])
+
+            info.classList.remove("d-none")
+
+            let data = new FormData();
+            data.append("file", e.target.files[0])
+
+            await fetch("/api/images", {
+                method: "POST",
+                headers: {
+                    'Accept': '*/*'
+                },
+                body: data
+            }).then(res => res.json())
+                .then(result => {
+                    featuredImageUrl.value = result.link;
+                    info.classList.add("d-none")
+                    imagePrev.src = result.link;
+                })
+        }
     </script>
 }

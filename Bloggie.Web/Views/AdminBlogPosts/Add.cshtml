@@ -84,11 +84,12 @@
                     'buttons': ['bold', 'italic', 'underline', 'strikeThrough', 'fontFamily', 'fontSize', 'clearFormatting']
                 },
                 'moreMisc': {
-                    'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'html'],
+                    'buttons': ['undo', 'redo', 'fullscreen', 'print', 'getPDF', 'html', 'insertImage'],
                 }
-            }
+            },
+            imageUploadURL: '/api/images'
         })
-
+        
 
         const imageUploadElem = document.getElementById("featuredImageUpload");
         const featuredImageUrl = document.getElementById("featuredImage");
