@@ -20,6 +20,7 @@ namespace Bloggie.Web.Controllers
         [HttpGet]
         public IActionResult Add()
         {
+            ViewData["active"] = "addTag";
             return View();
         }
 
@@ -61,6 +62,7 @@ namespace Bloggie.Web.Controllers
             // read db conttext
             var tags = await tagRepository.GetAllAsync();
 
+            ViewData["active"] = "showTag";
             return View(tags);
         }
 

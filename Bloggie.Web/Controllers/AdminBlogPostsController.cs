@@ -4,6 +4,7 @@ using Bloggie.Web.Repositories.BlogPostRepo;
 using Bloggie.Web.Repositories.TagRepo;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.ObjectModel;
 
 namespace Bloggie.Web.Controllers
@@ -34,6 +35,7 @@ namespace Bloggie.Web.Controllers
                 })
             };
 
+            ViewData["active"] = "addBlog";
             return View(blogReq);
         }
 
@@ -95,6 +97,7 @@ namespace Bloggie.Web.Controllers
         public async Task<IActionResult> List()
         {
             var blogList = await blogRepository.GetAllAsync();
+            ViewData["active"] = "showBlog";
             return View(blogList);
         }
 
@@ -203,6 +206,33 @@ namespace Bloggie.Web.Controllers
 
             TempData["msg"] = "Failed to Delete blog";
             return RedirectToAction("Edit", new { id = editBlogPost.Id });
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteOuter()
+        {
+
+            Guid id = new Guid(Request.Form["idBlog"].ToString());
+            try
+            {
+                var tag = await blogRepository.DeleteAsync(id);
+
+                if (tag != null)
+                {
+                    TempData["msg"] = "Succes to Delete";
+                }
+
+            }
+            catch (DbUpdateException e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                TempData["msg"] = $"Failed to Delete {e.Message}";
+            }
+
+            return RedirectToAction("List");
+
         }
 
     }
