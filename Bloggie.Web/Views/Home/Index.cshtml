@@ -1,8 +1,57 @@
-﻿@{
+﻿@model List<Bloggie.Web.Models.Domain.BlogPosts>;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container col-xxl-8 px-4 py-5">
+    <div class="row align-items-center g-5 py-5">
+        <div class="col-sm-12 col-lg-6">
+            <h1 class="display-5 fw-bold lh-3 mb-3">
+                Bloggies - The <span class="text-danger">Developer</span> Blog.
+            </h1>
+            <p class="lead">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris tincidunt gravida placerat. Fusce sed metus sed ipsum dapibus malesuada sit amet ac nulla. Praesent magna nibh, porta vel neque id, tristique sodales dui. Nam iaculis malesuada nisl, et pellentesque dolor ultricies id.
+            </p>
+        </div>
+
+        <div class="col-sm-12 col-lg-6">
+            <img src="https://images.pexels.com/photos/733856/pexels-photo-733856.jpeg" alt="image-letter" class="d-block mx-lg-auto img-fluid rounded" width="400" />
+        </div>
+    </div>
 </div>
+
+<section id="blogPost" class="container">
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var item in Model)
+                {
+                    <div class="mb-5 bg-light shadow-sm p-3">
+                        <img src="@item.FeaturedImageUrl" alt="Image blog" class="d-block mb-2 img-fluid" />
+                        <h3 class="mb-2">@item.Heading</h3>
+                        <p class="mb-3">
+                            Author : @item.Author
+                            <br />
+                            Published Date : @item.PublishDate.ToShortDateString()
+                        </p>
+
+                        <div class="d-flex gap-2 mb-3">
+                            @foreach (var tag in @item.Tags)
+                            {
+                                <span class="badge rounded-pill bg-secondary">@tag.DisplayName</span>
+                            }
+                        </div>
+
+                        <p class="mb-3">
+                           @item.ShortDescription
+                        </p>
+
+                        <a href="#" class="btn btn-secondary">Read More..</a>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
