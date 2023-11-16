@@ -1,4 +1,4 @@
-﻿@model List<Bloggie.Web.Models.Domain.BlogPosts>;
+﻿@model Bloggie.Web.Models.ViewModel.HomeViewModel;
 
 @{
     ViewData["Title"] = "Home Page";
@@ -21,11 +21,22 @@
     </div>
 </div>
 
+<section id="Tags" class="container mb-3">
+    <div class="row justify-content-center">
+        <div class="col-sm-6">
+            @foreach (var tag in Model.Tags)
+            {
+                <span class="badge bg-dark">@tag.DisplayName</span>
+            }
+        </div>
+    </div>
+</section>
+
 <section id="blogPost" class="container overflow-hidden px-4">
     <div class="row justify-content-center gx-5">
-        @if (Model != null && Model.Any())
+        @if (Model.BlogPosts != null && Model.BlogPosts.Any())
         {
-            foreach (var item in Model)
+            foreach (var item in Model.BlogPosts)
             {
             <div class="col-sm-6">
                 <div class="mb-5 bg-light shadow-sm p-3">
@@ -48,14 +59,17 @@
                         @item.ShortDescription
                     </p>
 
-                    <a class="btn btn-secondary" asp-route-urlHandle="@item.UrlHandle"
+                    <a class="btn btn-primary btn-sm" asp-route-urlHandle="@item.UrlHandle"
                         asp-controller="Blogs"
                         asp-action="Index"
                     >Read More..</a>
                 </div>
-            </div>
+                </div>
 
             }
+        } else
+        {
+            <h2>Blog Tidak ada..</h2>
         }
     </div>
 </section>

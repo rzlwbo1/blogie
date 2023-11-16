@@ -14,7 +14,7 @@ namespace Bloggie.Web.Controllers
         }
 
 
-        [HttpGet, Route("blogs/{urlHandle}")]
+        [HttpGet, Route("blog/details/{urlHandle}")]
         public async Task<IActionResult> Index(string urlHandle)
         {
            
