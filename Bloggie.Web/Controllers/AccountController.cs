@@ -7,10 +7,12 @@ namespace Bloggie.Web.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<IdentityUser> userManager;
+        private readonly SignInManager<IdentityUser> signInManager;
 
-        public AccountController(UserManager<IdentityUser> userManager)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
         {
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
 
@@ -49,10 +51,26 @@ namespace Bloggie.Web.Controllers
             return RedirectToAction("Register"); ;
         }
 
-        [HttpGet]
+
+        [HttpGet, Route("/auth/login")]
         public IActionResult Login()
         {
             return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        [ActionName("DoLogin")]
+        public async Task<IActionResult> Login(LoginViewModel loginVm)
+        {
+            var signInRes = await signInManager.PasswordSignInAsync(loginVm.Username, loginVm.Password, false, false);
+            
+            if (signInRes.Succeeded && signInRes != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            TempData["msgErr"] = "Username / Password Incorrect!";
+            return RedirectToAction("Login");
         }
     }
 }
