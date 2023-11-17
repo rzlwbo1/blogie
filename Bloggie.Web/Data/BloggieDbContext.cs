@@ -11,5 +11,6 @@ namespace Bloggie.Web.Data
 
         public DbSet<BlogPosts> BlogPosts { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<BlogPostsLike> BlogPostsLike { get; set; }
     }
 }
