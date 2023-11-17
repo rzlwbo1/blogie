@@ -53,10 +53,12 @@ namespace Bloggie.Web.Controllers
 
 
         [HttpGet, Route("/auth/login")]
+        [Route("/Account/Login")]
         public IActionResult Login()
         {
             return View();
         }
+
 
         [HttpPost, ValidateAntiForgeryToken]
         [ActionName("DoLogin")]
@@ -79,6 +81,13 @@ namespace Bloggie.Web.Controllers
         {
             await signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

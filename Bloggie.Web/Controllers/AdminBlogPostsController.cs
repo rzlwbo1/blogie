@@ -2,6 +2,7 @@
 using Bloggie.Web.Models.ViewModel;
 using Bloggie.Web.Repositories.BlogPostRepo;
 using Bloggie.Web.Repositories.TagRepo;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using System.Collections.ObjectModel;
 
 namespace Bloggie.Web.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminBlogPostsController : Controller
     {
         private readonly ITagRepository tagRepository;
