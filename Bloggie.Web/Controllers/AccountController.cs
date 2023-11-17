@@ -72,5 +72,13 @@ namespace Bloggie.Web.Controllers
             TempData["msgErr"] = "Username / Password Incorrect!";
             return RedirectToAction("Login");
         }
+
+
+        [HttpGet, Route("/auth/logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
