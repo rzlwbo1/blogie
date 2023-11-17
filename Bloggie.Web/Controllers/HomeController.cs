@@ -31,7 +31,7 @@ namespace Bloggie.Web.Controllers
 
             var model = new HomeViewModel
             {
-                BlogPosts = allBLogs,
+                BlogPosts = allBLogs.Reverse(),
                 Tags = allTags
             };
 

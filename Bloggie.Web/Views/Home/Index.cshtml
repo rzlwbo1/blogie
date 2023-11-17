@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Home Page";
+    string[] variants = { "dark", "warning", "primary", "danger", "success", "info" };
 }
 
 <div class="container col-xxl-8 px-4 py-5">
@@ -26,7 +27,11 @@
         <div class="col-sm-6">
             @foreach (var tag in Model.Tags)
             {
-                <span class="badge bg-dark">@tag.DisplayName</span>
+                Random rand = new Random();
+                int num = rand.Next(5);
+                var variant = variants[num];
+
+                <span class="badge bg-@variant">@tag.DisplayName</span>
             }
         </div>
     </div>
@@ -51,7 +56,10 @@
                     <div class="d-flex gap-2 mb-3">
                         @foreach (var tag in @item.Tags)
                         {
-                            <span class="badge rounded-pill bg-secondary">@tag.DisplayName</span>
+                                Random rand = new Random();
+                                int num = rand.Next(5);
+                                var variant = variants[num];
+                            <span class="badge rounded-pill bg-@variant">@tag.DisplayName</span>
                         }
                     </div>
 
