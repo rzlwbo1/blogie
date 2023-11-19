@@ -1,4 +1,8 @@
-﻿@model Bloggie.Web.Models.ViewModel.BlogDetailsViewModel;
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<IdentityUser> signInManager;
+@inject UserManager<IdentityUser> userManager;
+
+@model Bloggie.Web.Models.ViewModel.BlogDetailsViewModel;
 @{
     ViewData["Title"] = Model.PageTitle;
 }
@@ -16,8 +20,16 @@
                     <p class="text-secondary">@Model.PublishDate.ToShortDateString()</p>
                 </div>
 
-                <div class="mb-3">
-                    <img src="~/icons/heart.svg" class="img-fluid" /> <span class="text-secondary"> @Model.TotalLikes Likes</span>
+                <div class="mb-3 d-flex">
+
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <a id="btnLike" style="cursor: pointer;">
+                            <img src="~/icons/heart.svg" class="img-fluid" />
+                        </a>
+                    }
+
+                    &nbsp; <span class="text-secondary"> @Model.TotalLikes Likes</span>
                 </div>
 
                 <div class="mb-3 d-flex gap-2">
@@ -41,3 +53,29 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        const btnLikeElem = document.getElementById("btnLike");
+
+        let reqBody = {
+            BlogPostId: '@Model.Id',
+            UserId: '@userManager.GetUserId(User)'
+        }
+
+        async function addLikeBlog() {
+            fetch("/api/BLogPostLike/Add", {
+                method: "POST",
+                headers : {
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*'
+                },
+                body: JSON.stringify(reqBody)
+            })
+            .then(res => console.log("Request Finished"))
+            .catch(err => console.log(err.message))
+        }
+
+        btnLikeElem.addEventListener("click", addLikeBlog);
+    </script>
+}
