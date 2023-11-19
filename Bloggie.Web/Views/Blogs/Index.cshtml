@@ -1,4 +1,4 @@
-﻿@model Bloggie.Web.Models.Domain.BlogPosts;
+﻿@model Bloggie.Web.Models.ViewModel.BlogDetailsViewModel;
 @{
     ViewData["Title"] = Model.PageTitle;
 }
@@ -14,6 +14,10 @@
                 <div class="d-flex justify-content-between">
                     <h6 class="text-secondary">@Model.Author</h6>
                     <p class="text-secondary">@Model.PublishDate.ToShortDateString()</p>
+                </div>
+
+                <div class="mb-3">
+                    <img src="~/icons/heart.svg" class="img-fluid" /> <span class="text-secondary"> @Model.TotalLikes Likes</span>
                 </div>
 
                 <div class="mb-3 d-flex gap-2">
