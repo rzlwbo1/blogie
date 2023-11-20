@@ -24,9 +24,19 @@
 
                     @if (signInManager.IsSignedIn(User))
                     {
-                        <a id="btnLike" style="cursor: pointer;">
-                            <img src="~/icons/heart.svg" class="img-fluid" />
-                        </a>
+
+                        if (Model.Liked)
+                        {
+                            <a style="cursor: pointer;">
+                                <img src="~/icons/heart-fill.svg" class="img-fluid" />
+                            </a>
+                        } else
+                        {
+                            <a id="btnLike" style="cursor: pointer;">
+                                <img src="~/icons/heart.svg" class="img-fluid" />
+                            </a>
+                        }
+
                     }
 
                     &nbsp; <span class="text-secondary" id="totalLikes"> @Model.TotalLikes Likes</span>
@@ -97,6 +107,8 @@
             .catch(err => console.log(err.message))
         }
 
-        btnLikeElem.addEventListener("click", addLikeBlog);
+        if(btnLikeElem) {
+            btnLikeElem.addEventListener("click", addLikeBlog);
+        } 
     </script>
 }
