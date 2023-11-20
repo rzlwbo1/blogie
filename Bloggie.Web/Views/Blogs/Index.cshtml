@@ -29,7 +29,7 @@
                         </a>
                     }
 
-                    &nbsp; <span class="text-secondary"> @Model.TotalLikes Likes</span>
+                    &nbsp; <span class="text-secondary" id="totalLikes"> @Model.TotalLikes Likes</span>
                 </div>
 
                 <div class="mb-3 d-flex gap-2">
@@ -57,11 +57,27 @@
 @section Scripts {
     <script>
         const btnLikeElem = document.getElementById("btnLike");
+        const totalLikeElem = document.getElementById("totalLikes");
 
         let reqBody = {
             BlogPostId: '@Model.Id',
             UserId: '@userManager.GetUserId(User)'
         }
+
+
+        async function getTotalLikes() {
+            fetch("/api/BLogPostLike/@Model.Id/totalLikes", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*'
+                }
+            })
+            .then(data => data.json())
+            .then(res => totalLikeElem.textContent = res + " Likes")
+        }
+
+
 
         async function addLikeBlog() {
             fetch("/api/BLogPostLike/Add", {
@@ -72,7 +88,12 @@
                 },
                 body: JSON.stringify(reqBody)
             })
-            .then(res => console.log("Request Finished"))
+            .then(res => {
+                btnLikeElem.children[0].src = "/icons/heart-fill.svg";
+                btnLikeElem.removeEventListener("click", addLikeBlog);
+
+                getTotalLikes();
+            })
             .catch(err => console.log(err.message))
         }
 

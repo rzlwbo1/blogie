@@ -35,5 +35,16 @@ namespace Bloggie.Web.Controllers.API
 
         }
 
+
+        [HttpGet, Route("{blogPostId:Guid}/totalLikes")]
+        public async Task<IActionResult> GetTotalLikesBlog([FromRoute] Guid blogPostId)
+        {
+
+            int likesTotal = await likeRepository.GetTotalLikesAsync(blogPostId);
+
+            return Ok(likesTotal);
+
+        }
+
     }
 }
