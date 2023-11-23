@@ -64,6 +64,24 @@ namespace Bloggie.Web.Controllers
 
                 }
 
+
+                // get all comments by this blog id
+                List<BlogPostsComment> getAllComments = await blogComment.GetAllCommentsByBlogId(blog.Id);
+
+                List<BlogCommentVm> allComments = new List<BlogCommentVm>();
+
+                foreach (var comment in getAllComments)
+                {
+                    allComments.Add(new BlogCommentVm
+                    {
+                        Username = (await userManager.FindByIdAsync(comment.UserId.ToString())).UserName,
+                        Description = comment.Description,
+                        DateAdded = comment.DateAdded,
+                    });
+                };
+
+                allComments.Reverse();
+
                 model = new BlogDetailsViewModel
                 {
                     Id = blog.Id,
@@ -79,6 +97,7 @@ namespace Bloggie.Web.Controllers
                     Tags = blog.Tags,
                     TotalLikes = totalLikes,
                     Liked = liked,
+                    Comments = allComments
                 };
             }
 

@@ -77,7 +77,27 @@
                             <p class="mb-0">Sign in to comment this blog</p>
                         }
                     </div>
-                    <div class="card-body"></div>
+                    <div class="card-body">
+                        @if (Model.Comments != null && Model.Comments.Any())
+                        {
+                            @foreach (var comm in Model.Comments)
+                            {
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p class="text-secondary">@@@comm.Username</p>
+
+                                        <div class="d-flex justify-content-between">
+                                            <h4 class="mb-1">@comm.Description</h4>
+                                            <p class="mb-1">@comm.DateAdded.ToShortDateString()</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        } else
+                        {
+                            <p>No comment for this blog</p>
+                        }
+                    </div>
                 </div>
 
 
