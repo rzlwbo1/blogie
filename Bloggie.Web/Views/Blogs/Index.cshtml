@@ -55,6 +55,32 @@
                 </div>
 
 
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Comments</h4>
+
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            <form method="post" asp-action="AddComment" asp-controller="Blogs">
+                                <div class="mb-3">
+                                    <label for="comment" class="form-label">Put Comment</label>
+                                    <input type="text" class="form-control" id="comment" asp-for="CommentDesc">
+                                </div>
+                                <div class="mb-3">
+                                    <button class="btn btn-dark" type="submit">Post</button>
+                                    <input type="hidden" asp-for="Id" readonly>
+                                    <input type="hidden" asp-for="UrlHandle" readonly>
+                                </div>
+                            </form>
+                        } else
+                        {
+                            <p class="mb-0">Sign in to comment this blog</p>
+                        }
+                    </div>
+                    <div class="card-body"></div>
+                </div>
+
+
             } else
             {
                 <h4>Blog Not Found!</h4>

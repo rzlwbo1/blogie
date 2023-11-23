@@ -1,9 +1,11 @@
 ﻿using Bloggie.Web.Models.Domain;
 using Bloggie.Web.Models.ViewModel;
 using Bloggie.Web.Repositories.BlogPostRepo;
+using Bloggie.Web.Repositories.CommentRepo;
 using Bloggie.Web.Repositories.LikesRepo;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata;
 
 namespace Bloggie.Web.Controllers
 {
@@ -13,15 +15,17 @@ namespace Bloggie.Web.Controllers
         private readonly IBlogPostLikeRepository likePostRepository;
         private readonly SignInManager<IdentityUser> signInManager;
         private readonly UserManager<IdentityUser> userManager;
+        private readonly IBlogCommentRepository blogComment;
 
         public BlogsController(IBlogPostsRepository blogRepository, 
             IBlogPostLikeRepository blogPostLikeRepository, SignInManager<IdentityUser> signInManager,
-            UserManager<IdentityUser> userManager)
+            UserManager<IdentityUser> userManager, IBlogCommentRepository blogComment)
         {
             this.blogRepository = blogRepository;
             this.likePostRepository = blogPostLikeRepository;
             this.signInManager = signInManager;
             this.userManager = userManager;
+            this.blogComment = blogComment;
         }
 
 
@@ -79,6 +83,28 @@ namespace Bloggie.Web.Controllers
             }
 
             return View(model);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddComment(BlogDetailsViewModel blogDetails)
+        {
+            if (signInManager.IsSignedIn(User))
+            {
+                var newComment = new BlogPostsComment
+                {
+                    BlogPostsId = blogDetails.Id,
+                    Description = blogDetails.CommentDesc,
+                    UserId = Guid.Parse(userManager.GetUserId(User)),
+                    DateAdded = DateTime.Now
+                };
+
+                await blogComment.AddCommentAsync(newComment);
+                return RedirectToAction("Index", "Blogs", new { urlHandle = blogDetails.UrlHandle});
+            }
+
+            return Forbid();
         }
     }
 }
