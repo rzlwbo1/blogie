@@ -36,10 +36,18 @@
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item @((string) ViewData["active"] == "addTag" ? "active" : "") " asp-area="" asp-controller="AdminTags" asp-action="Add">Add Tag</a></li>
+
                                     <li><a class="dropdown-item  @((string) ViewData["active"] == "showTag" ? "active" : "")" asp-area="" asp-controller="AdminTags" asp-action="List">Show All Tags</a></li>
+
                                     <li><hr class="dropdown-divider"></li>
+
                                     <li><a class="dropdown-item  @((string) ViewData["active"] == "addBlog" ? "active" : "")" asp-area="" asp-controller="AdminBlogPosts" asp-action="Add">Add Blog</a></li>
+
                                     <li><a class="dropdown-item  @((string) ViewData["active"] == "showBlog" ? "active" : "")" asp-area="" asp-controller="AdminBlogPosts" asp-action="List">Show All Blogs</a></li>
+
+                                    <li><hr class="dropdown-divider"></li>
+
+                                    <li><a class="dropdown-item  @((string) ViewData["active"] == "showUsers" ? "active" : "")" asp-area="" asp-controller="AdminUsers" asp-action="Index">Show All Users</a></li>
                                 </ul>
                             </li>
                         }
