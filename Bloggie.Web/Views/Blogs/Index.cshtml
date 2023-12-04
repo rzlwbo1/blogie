@@ -24,12 +24,22 @@
 
                     @if (signInManager.IsSignedIn(User))
                     {
-                        <a id="btnLike" style="cursor: pointer;">
-                            <img src="~/icons/heart.svg" class="img-fluid" />
-                        </a>
+
+                        if (Model.Liked)
+                        {
+                            <a style="cursor: pointer;">
+                                <img src="~/icons/heart-fill.svg" class="img-fluid" />
+                            </a>
+                        } else
+                        {
+                            <a id="btnLike" style="cursor: pointer;">
+                                <img src="~/icons/heart.svg" class="img-fluid" />
+                            </a>
+                        }
+
                     }
 
-                    &nbsp; <span class="text-secondary"> @Model.TotalLikes Likes</span>
+                    &nbsp; <span class="text-secondary" id="totalLikes"> @Model.TotalLikes Likes</span>
                 </div>
 
                 <div class="mb-3 d-flex gap-2">
@@ -45,6 +55,52 @@
                 </div>
 
 
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Comments</h4>
+
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            <form method="post" asp-action="AddComment" asp-controller="Blogs">
+                                <div class="mb-3">
+                                    <label for="comment" class="form-label">Put Comment</label>
+                                    <input type="text" class="form-control" id="comment" asp-for="CommentDesc">
+                                </div>
+                                <div class="mb-3">
+                                    <button class="btn btn-dark" type="submit">Post</button>
+                                    <input type="hidden" asp-for="Id" readonly>
+                                    <input type="hidden" asp-for="UrlHandle" readonly>
+                                </div>
+                            </form>
+                        } else
+                        {
+                            <p class="mb-0">Sign in to comment this blog</p>
+                        }
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Comments != null && Model.Comments.Any())
+                        {
+                            @foreach (var comm in Model.Comments)
+                            {
+                                <div class="card mb-3">
+                                    <div class="card-body">
+                                        <p class="text-secondary">@@@comm.Username</p>
+
+                                        <div class="d-flex justify-content-between">
+                                            <h4 class="mb-1">@comm.Description</h4>
+                                            <p class="mb-1">@comm.DateAdded.ToShortDateString()</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        } else
+                        {
+                            <p>No comment for this blog</p>
+                        }
+                    </div>
+                </div>
+
+
             } else
             {
                 <h4>Blog Not Found!</h4>
@@ -57,11 +113,27 @@
 @section Scripts {
     <script>
         const btnLikeElem = document.getElementById("btnLike");
+        const totalLikeElem = document.getElementById("totalLikes");
 
         let reqBody = {
             BlogPostId: '@Model.Id',
             UserId: '@userManager.GetUserId(User)'
         }
+
+
+        async function getTotalLikes() {
+            fetch("/api/BLogPostLike/@Model.Id/totalLikes", {
+                method: "GET",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*'
+                }
+            })
+            .then(data => data.json())
+            .then(res => totalLikeElem.textContent = res + " Likes")
+        }
+
+
 
         async function addLikeBlog() {
             fetch("/api/BLogPostLike/Add", {
@@ -72,10 +144,17 @@
                 },
                 body: JSON.stringify(reqBody)
             })
-            .then(res => console.log("Request Finished"))
+            .then(res => {
+                btnLikeElem.children[0].src = "/icons/heart-fill.svg";
+                btnLikeElem.removeEventListener("click", addLikeBlog);
+
+                getTotalLikes();
+            })
             .catch(err => console.log(err.message))
         }
 
-        btnLikeElem.addEventListener("click", addLikeBlog);
+        if(btnLikeElem) {
+            btnLikeElem.addEventListener("click", addLikeBlog);
+        } 
     </script>
 }
